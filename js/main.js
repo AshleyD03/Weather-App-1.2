@@ -50,13 +50,13 @@ window.addEventListener("load", function() {
       buttons[i].setAttribute("onclick", "geoBegin('forecast'," + (i + dayCurrent + 1)%7 + ")");
     }
     console.log("day current" + dayCurrent)
-    geoBegin("forecast", 5);
+    geoBegin("forecast", (dayCurrent + 1) % 7);
 });
 
 // Begin geoBegin progress
 // Event order: 1. check geo works
 //              2. return lat and long array from function
-//              3. begin 
+//              3. begin dataTakeAndAdd
 function geoBegin(weatherType, dayChoice) {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function(position){
@@ -111,15 +111,15 @@ async function dataTAA(chords, weatherType, dayChoice) {
     // weather for specific day 
     if (weatherType == "forecast"){
 
-      header2.innerHTML = dayList[(dayChoice*dayChoice)%7];
-      console.log((dayChoice*dayChoice)%7);
+      header2.innerHTML = dayList[(dayChoice+6)%7];
+      console.log((dayChoice+6)%7);
       
       if (imgThere) {
         for (var i = 0; i < 8; i++) {
           if (lastImgList[i] != "ignore") {
             imgs[i].removeChild(lastImgList[i]);
           }
-          
+
         }
       }
       else {
@@ -127,11 +127,14 @@ async function dataTAA(chords, weatherType, dayChoice) {
       }
 
       console.log(data);
+      console.log(dayChoice);
+
       lastImgList = [];
       for (var i = 0; i < 8; i++) {
+        console.log(data.Days[dayChoice].Timeframes[i]);
         var weatherImg = document.createElement("img");
         var imgsrc = "image/weatherGif/" + data.Days[dayChoice].Timeframes[i].wx_icon;
-        weatherImg.setAttribute("src", imgsrc); weatherImg.setAttribute("class", "gif2")
+        weatherImg.setAttribute("src", imgsrc); weatherImg.setAttribute("class", "gif2");
         imgs[i].appendChild(weatherImg);
         lastImgList.push(weatherImg);
 
